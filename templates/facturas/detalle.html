@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Factura {{ factura.nro_factura }}{% endblock %}
+{% block content %}
+<div class="mb-2" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Factura</h2>
+    <div class="btn-group no-print">
+        <button onclick="window.print()" class="btn btn-primary">Imprimir</button>
+        <a href="{{ url_for('ventas.detalle', id_venta=venta.id_venta) }}" class="btn btn-secondary">Ver venta</a>
+    </div>
+</div>
+
+<div class="invoice-box">
+    <div class="invoice-header">
+        <div>
+            <h3>Transporte Interdepartamental</h3>
+            <p class="text-muted">Sistema de Venta y Facturación de Pasajes</p>
+        </div>
+        <div class="text-right">
+            <p><strong>Factura Nº:</strong> {{ factura.nro_factura }}</p>
+            <p><strong>Fecha emisión:</strong> {{ factura.fecha_emision.strftime("%d/%m/%Y") }}</p>
+            <p>
+                <strong>Estado:</strong>
+                {% if venta.estado == "activa" %}
+                <span class="badge badge-success">Activa</span>
+                {% elif venta.estado == "rebajada" %}
+                <span class="badge badge-warning">Rebajada</span>
+                {% else %}
+                <span class="badge badge-danger">Anulada</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="grid grid-2 mb-2">
+        <div>
+            <h3>Cliente</h3>
+            <p><strong>Nombre:</strong> {{ venta.pasajero.nombre_completo }}</p>
+            <p><strong>CI:</strong> {{ venta.pasajero.ci }}</p>
+            <p><strong>Teléfono:</strong> {{ venta.pasajero.telefono or "-" }}</p>
+        </div>
+        <div>
+            <h3>Datos del viaje</h3>
+            <p><strong>Ruta:</strong> {{ venta.viaje.origen }} → {{ venta.viaje.destino }}</p>
+            <p><strong>Fecha:</strong> {{ venta.viaje.fecha_viaje.strftime("%d/%m/%Y") }} - {{ venta.viaje.hora_salida.strftime("%H:%M") }}</p>
+            <p><strong>Bus:</strong> {{ venta.viaje.bus.placa }} ({{ venta.viaje.bus.modelo }})</p>
+            <p><strong>Chofer:</strong> {{ venta.viaje.chofer.nombre_completo }}</p>
+        </div>
+    </div>
+
+    <h3>Detalle de boletos</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Asiento Nº</th>
+                <th>Descripción</th>
+                <th>Estado</th>
+                <th class="text-right">Precio (Bs)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in venta.detalles %}
+            <tr>
+                <td>{{ d.viaje_asiento.numero }}</td>
+                <td>Pasaje {{ venta.viaje.origen }} - {{ venta.viaje.destino }}</td>
+                <td>
+                    {% if d.estado == "activo" %}
+                    <span class="badge badge-success">Activo</span>
+                    {% else %}
+                    <span class="badge badge-gray">Rebajado</span>
+                    {% endif %}
+                </td>
+                <td class="text-right">{{ "%.2f"|format(d.precio) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="invoice-total">
+        <p>Total: Bs {{ "%.2f"|format(factura.total) }}</p>
+        <p style="font-size:0.95rem; font-weight:normal;">Pagado: Bs {{ "%.2f"|format(venta.monto_pagado) }} | Cambio: Bs {{ "%.2f"|format(venta.cambio) }}</p>
+    </div>
+</div>
+{% endblock %}

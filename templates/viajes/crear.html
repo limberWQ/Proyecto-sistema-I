@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Nuevo viaje{% endblock %}
+{% block content %}
+<h2 class="mb-2">Registrar viaje</h2>
+
+<div class="card" style="max-width:600px;">
+    <form method="POST">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="origen">Origen</label>
+                <input type="text" id="origen" name="origen" required maxlength="100" placeholder="Ej. La Paz">
+            </div>
+            <div class="form-group">
+                <label for="destino">Destino</label>
+                <input type="text" id="destino" name="destino" required maxlength="100" placeholder="Ej. Cochabamba">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="fecha_viaje">Fecha</label>
+                <input type="date" id="fecha_viaje" name="fecha_viaje" required>
+            </div>
+            <div class="form-group">
+                <label for="hora_salida">Hora de salida</label>
+                <input type="time" id="hora_salida" name="hora_salida" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="precio">Precio por asiento (Bs)</label>
+            <input type="number" id="precio" name="precio" step="0.01" min="0.01" required placeholder="Ej. 50.00">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="id_bus">Bus</label>
+                <select id="id_bus" name="id_bus" required>
+                    <option value="">Seleccionar bus...</option>
+                    {% for bus in buses %}
+                    <option value="{{ bus.id_bus }}">{{ bus.placa }} - {{ bus.modelo }} ({{ bus.capacidad }} asientos)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="id_chofer">Chofer</label>
+                <select id="id_chofer" name="id_chofer" required>
+                    <option value="">Seleccionar chofer...</option>
+                    {% for chofer in choferes %}
+                    <option value="{{ chofer.id_chofer }}">{{ chofer.nombre_completo }} (CI: {{ chofer.ci }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{{ url_for('viajes.listar') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Caja{% endblock %}
+{% block content %}
+<div class="mb-2" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Caja - Ingresos y Egresos</h2>
+    <a href="{{ url_for('caja.registrar') }}" class="btn btn-primary">+ Nuevo movimiento</a>
+</div>
+
+<div class="grid grid-3 mb-2">
+    <div class="stat-box positive">
+        <div class="stat-value">Bs {{ "%.2f"|format(balance.ingresos) }}</div>
+        <div class="stat-label">Total ingresos</div>
+    </div>
+    <div class="stat-box negative">
+        <div class="stat-value">Bs {{ "%.2f"|format(balance.egresos) }}</div>
+        <div class="stat-label">Total egresos</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">Bs {{ "%.2f"|format(balance.saldo) }}</div>
+        <div class="stat-label">Saldo en caja</div>
+    </div>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Concepto</th>
+                <th>Monto</th>
+                <th>Usuario</th>
+                <th>Venta relacionada</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimientos %}
+            <tr>
+                <td>{{ m.id_movimiento }}</td>
+                <td>{{ m.fecha.strftime("%d/%m/%Y %H:%M") }}</td>
+                <td>
+                    {% if m.tipo == "ingreso" %}
+                    <span class="badge badge-success">Ingreso</span>
+                    {% else %}
+                    <span class="badge badge-danger">Egreso</span>
+                    {% endif %}
+                </td>
+                <td>{{ m.concepto }}</td>
+                <td>Bs {{ "%.2f"|format(m.monto) }}</td>
+                <td>{{ m.usuario.nombre }}</td>
+                <td>
+                    {% if m.id_venta %}
+                    <a href="{{ url_for('ventas.detalle', id_venta=m.id_venta) }}">Venta #{{ m.id_venta }}</a>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="empty-state">No hay movimientos registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

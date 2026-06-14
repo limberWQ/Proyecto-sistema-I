@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Viajes{% endblock %}
+{% block content %}
+<div class="mb-2" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Viajes</h2>
+    <a href="{{ url_for('viajes.crear') }}" class="btn btn-primary">+ Nuevo viaje</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Bus</th>
+                <th>Chofer</th>
+                <th>Precio</th>
+                <th>Asientos</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for v in viajes %}
+            <tr>
+                <td>{{ v.fecha_viaje.strftime("%d/%m/%Y") }}</td>
+                <td>{{ v.hora_salida.strftime("%H:%M") }}</td>
+                <td>{{ v.origen }}</td>
+                <td>{{ v.destino }}</td>
+                <td>{{ v.bus.placa }}</td>
+                <td>{{ v.chofer.nombre_completo }}</td>
+                <td>Bs {{ "%.2f"|format(v.precio) }}</td>
+                <td>{{ v.asientos_disponibles }} / {{ v.viaje_asientos|length }}</td>
+                <td>
+                    {% if v.estado == "programado" %}
+                    <span class="badge badge-blue">Programado</span>
+                    {% elif v.estado == "finalizado" %}
+                    <span class="badge badge-success">Finalizado</span>
+                    {% else %}
+                    <span class="badge badge-danger">Cancelado</span>
+                    {% endif %}
+                    {% if v.tiene_ventas %}
+                    <span class="badge badge-warning">Con ventas</span>
+                    {% endif %}
+                </td>
+                <td class="btn-group">
+                    {% if not v.tiene_ventas %}
+                    <a href="{{ url_for('viajes.editar', id_viaje=v.id_viaje) }}" class="btn btn-sm btn-secondary">Editar</a>
+                    <form method="POST" action="{{ url_for('viajes.eliminar', id_viaje=v.id_viaje) }}" onsubmit="return confirmarAccion('¿Eliminar este viaje?')">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                    {% else %}
+                    <span class="text-muted" style="font-size:0.85rem;">Bloqueado (tiene ventas)</span>
+                    {% endif %}
+                    <a href="{{ url_for('ventas.crear') }}?id_viaje={{ v.id_viaje }}" class="btn btn-sm btn-success">Vender</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="10" class="empty-state">No hay viajes registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

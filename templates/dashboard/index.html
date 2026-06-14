@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+<h2 class="mb-2">Panel de control</h2>
+
+<div class="grid grid-4 mb-2">
+    <div class="stat-box">
+        <div class="stat-value">{{ total_ventas_activas }}</div>
+        <div class="stat-label">Ventas activas</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">{{ total_buses }}</div>
+        <div class="stat-label">Buses</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">{{ total_choferes }}</div>
+        <div class="stat-label">Choferes</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">{{ total_pasajeros }}</div>
+        <div class="stat-label">Pasajeros</div>
+    </div>
+</div>
+
+<div class="grid grid-3 mb-2">
+    <div class="stat-box positive">
+        <div class="stat-value">Bs {{ "%.2f"|format(balance.ingresos) }}</div>
+        <div class="stat-label">Ingresos totales</div>
+    </div>
+    <div class="stat-box negative">
+        <div class="stat-value">Bs {{ "%.2f"|format(balance.egresos) }}</div>
+        <div class="stat-label">Egresos totales</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">Bs {{ "%.2f"|format(balance.saldo) }}</div>
+        <div class="stat-label">Saldo en caja</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Viajes de hoy</h3>
+    {% if viajes_hoy %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Bus</th>
+                    <th>Chofer</th>
+                    <th>Asientos</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in viajes_hoy %}
+                <tr>
+                    <td>{{ v.hora_salida.strftime("%H:%M") }}</td>
+                    <td>{{ v.origen }}</td>
+                    <td>{{ v.destino }}</td>
+                    <td>{{ v.bus.placa }}</td>
+                    <td>{{ v.chofer.nombre_completo }}</td>
+                    <td>{{ v.asientos_disponibles }} / {{ v.viaje_asientos|length }}</td>
+                    <td><span class="badge badge-blue">{{ v.estado }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">No hay viajes programados para hoy.</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3>Últimas ventas</h3>
+    {% if ultimas_ventas %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Pasajero</th>
+                    <th>Viaje</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venta in ultimas_ventas %}
+                <tr>
+                    <td>{{ venta.id_venta }}</td>
+                    <td>{{ venta.fecha_venta.strftime("%d/%m/%Y %H:%M") }}</td>
+                    <td>{{ venta.pasajero.nombre_completo }}</td>
+                    <td>{{ venta.viaje.origen }} → {{ venta.viaje.destino }}</td>
+                    <td>Bs {{ "%.2f"|format(venta.monto) }}</td>
+                    <td>
+                        {% if venta.estado == "activa" %}
+                        <span class="badge badge-success">Activa</span>
+                        {% elif venta.estado == "rebajada" %}
+                        <span class="badge badge-warning">Rebajada</span>
+                        {% else %}
+                        <span class="badge badge-danger">Anulada</span>
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ url_for('ventas.detalle', id_venta=venta.id_venta) }}">Ver</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">Aún no hay ventas registradas.</p>
+    {% endif %}
+</div>
+{% endblock %}

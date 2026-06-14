@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Editar bus{% endblock %}
+{% block content %}
+<h2 class="mb-2">Editar bus</h2>
+
+<div class="card" style="max-width:500px;">
+    <form method="POST">
+        <div class="form-group">
+            <label for="placa">Placa</label>
+            <input type="text" id="placa" name="placa" required maxlength="20" value="{{ bus.placa }}">
+        </div>
+        <div class="form-group">
+            <label for="modelo">Modelo</label>
+            <input type="text" id="modelo" name="modelo" required maxlength="50" value="{{ bus.modelo }}">
+        </div>
+        <div class="form-group">
+            <label for="capacidad">Capacidad (Nº de asientos)</label>
+            <input type="number" id="capacidad" name="capacidad" required min="1" max="80" value="{{ bus.capacidad }}">
+            <small class="text-muted">Si el bus tiene viajes con ventas, no se podrá cambiar la capacidad.</small>
+        </div>
+        <div class="form-group checkbox-row">
+            <input type="checkbox" id="activo" name="activo" {% if bus.activo %}checked{% endif %}>
+            <label for="activo" style="margin:0;">Activo</label>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a href="{{ url_for('buses.listar') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

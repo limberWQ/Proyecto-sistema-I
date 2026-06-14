@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Choferes{% endblock %}
+{% block content %}
+<div class="mb-2" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Choferes</h2>
+    <a href="{{ url_for('choferes.crear') }}" class="btn btn-primary">+ Nuevo chofer</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>CI</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Licencia</th>
+                <th>Teléfono</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for chofer in choferes %}
+            <tr>
+                <td>{{ chofer.ci }}</td>
+                <td>{{ chofer.nombres }}</td>
+                <td>{{ chofer.apellidos }}</td>
+                <td>{{ chofer.licencia }}</td>
+                <td>{{ chofer.telefono or "-" }}</td>
+                <td>
+                    {% if chofer.activo %}
+                    <span class="badge badge-success">Activo</span>
+                    {% else %}
+                    <span class="badge badge-gray">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td class="btn-group">
+                    <a href="{{ url_for('choferes.editar', id_chofer=chofer.id_chofer) }}" class="btn btn-sm btn-secondary">Editar</a>
+                    <form method="POST" action="{{ url_for('choferes.eliminar', id_chofer=chofer.id_chofer) }}" onsubmit="return confirmarAccion('¿Eliminar este chofer?')">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="empty-state">No hay choferes registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

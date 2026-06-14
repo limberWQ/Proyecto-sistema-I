@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Ventas{% endblock %}
+{% block content %}
+<div class="mb-2" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Ventas</h2>
+    <a href="{{ url_for('ventas.crear') }}" class="btn btn-primary">+ Nueva venta</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>Pasajero</th>
+                <th>Viaje</th>
+                <th>Asientos</th>
+                <th>Total</th>
+                <th>Pagado</th>
+                <th>Cambio</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venta in ventas %}
+            <tr>
+                <td>{{ venta.id_venta }}</td>
+                <td>{{ venta.fecha_venta.strftime("%d/%m/%Y %H:%M") }}</td>
+                <td>{{ venta.pasajero.nombre_completo }}</td>
+                <td>{{ venta.viaje.origen }} → {{ venta.viaje.destino }} ({{ venta.viaje.fecha_viaje.strftime("%d/%m/%Y") }})</td>
+                <td>{{ venta.detalles_activos|length }}</td>
+                <td>Bs {{ "%.2f"|format(venta.monto) }}</td>
+                <td>Bs {{ "%.2f"|format(venta.monto_pagado) }}</td>
+                <td>Bs {{ "%.2f"|format(venta.cambio) }}</td>
+                <td>
+                    {% if venta.estado == "activa" %}
+                    <span class="badge badge-success">Activa</span>
+                    {% elif venta.estado == "rebajada" %}
+                    <span class="badge badge-warning">Rebajada</span>
+                    {% else %}
+                    <span class="badge badge-danger">Anulada</span>
+                    {% endif %}
+                </td>
+                <td><a href="{{ url_for('ventas.detalle', id_venta=venta.id_venta) }}">Ver</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="10" class="empty-state">No hay ventas registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

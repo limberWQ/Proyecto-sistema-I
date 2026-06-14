@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Pasajeros{% endblock %}
+{% block content %}
+<div class="mb-2" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Pasajeros</h2>
+    <a href="{{ url_for('pasajeros.crear') }}" class="btn btn-primary">+ Nuevo pasajero</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>CI</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Teléfono</th>
+                <th>Compras</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pasajeros %}
+            <tr>
+                <td>{{ p.ci }}</td>
+                <td>{{ p.nombres }}</td>
+                <td>{{ p.apellidos }}</td>
+                <td>{{ p.telefono or "-" }}</td>
+                <td>{{ p.ventas|length }}</td>
+                <td class="btn-group">
+                    <a href="{{ url_for('pasajeros.editar', id_pasajero=p.id_pasajero) }}" class="btn btn-sm btn-secondary">Editar</a>
+                    <form method="POST" action="{{ url_for('pasajeros.eliminar', id_pasajero=p.id_pasajero) }}" onsubmit="return confirmarAccion('¿Eliminar este pasajero?')">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="empty-state">No hay pasajeros registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

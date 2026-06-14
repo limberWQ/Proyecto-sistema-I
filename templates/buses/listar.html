@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Buses{% endblock %}
+{% block content %}
+<div class="mb-2" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Buses</h2>
+    <a href="{{ url_for('buses.crear') }}" class="btn btn-primary">+ Nuevo bus</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Placa</th>
+                <th>Modelo</th>
+                <th>Capacidad</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bus in buses %}
+            <tr>
+                <td>{{ bus.placa }}</td>
+                <td>{{ bus.modelo }}</td>
+                <td>{{ bus.capacidad }}</td>
+                <td>
+                    {% if bus.activo %}
+                    <span class="badge badge-success">Activo</span>
+                    {% else %}
+                    <span class="badge badge-gray">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td class="btn-group">
+                    <a href="{{ url_for('buses.editar', id_bus=bus.id_bus) }}" class="btn btn-sm btn-secondary">Editar</a>
+                    <form method="POST" action="{{ url_for('buses.eliminar', id_bus=bus.id_bus) }}" onsubmit="return confirmarAccion('¿Eliminar este bus?')">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="empty-state">No hay buses registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

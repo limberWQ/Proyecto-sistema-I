@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Editar chofer{% endblock %}
+{% block content %}
+<h2 class="mb-2">Editar chofer</h2>
+
+<div class="card" style="max-width:500px;">
+    <form method="POST">
+        <div class="form-group">
+            <label for="ci">CI</label>
+            <input type="text" id="ci" name="ci" required maxlength="20" value="{{ chofer.ci }}">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="nombres">Nombres</label>
+                <input type="text" id="nombres" name="nombres" required maxlength="100" value="{{ chofer.nombres }}">
+            </div>
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input type="text" id="apellidos" name="apellidos" required maxlength="100" value="{{ chofer.apellidos }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="licencia">Licencia</label>
+            <input type="text" id="licencia" name="licencia" required maxlength="30" value="{{ chofer.licencia }}">
+        </div>
+        <div class="form-group">
+            <label for="telefono">Teléfono</label>
+            <input type="text" id="telefono" name="telefono" maxlength="20" value="{{ chofer.telefono or '' }}">
+        </div>
+        <div class="form-group checkbox-row">
+            <input type="checkbox" id="activo" name="activo" {% if chofer.activo %}checked{% endif %}>
+            <label for="activo" style="margin:0;">Activo</label>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a href="{{ url_for('choferes.listar') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Nuevo movimiento de caja{% endblock %}
+{% block content %}
+<h2 class="mb-2">Registrar movimiento de caja</h2>
+
+<div class="card" style="max-width:500px;">
+    <form method="POST">
+        <div class="form-group">
+            <label for="tipo">Tipo de movimiento</label>
+            <select id="tipo" name="tipo" required>
+                <option value="ingreso">Ingreso</option>
+                <option value="egreso">Egreso</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="concepto">Concepto</label>
+            <input type="text" id="concepto" name="concepto" required maxlength="150" placeholder="Ej. Pago de combustible">
+        </div>
+        <div class="form-group">
+            <label for="monto">Monto (Bs)</label>
+            <input type="number" id="monto" name="monto" step="0.01" min="0.01" required>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Registrar</button>
+            <a href="{{ url_for('caja.listar') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

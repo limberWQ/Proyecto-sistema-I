@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Venta #{{ venta.id_venta }}{% endblock %}
+{% block content %}
+<div class="mb-2" style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Venta #{{ venta.id_venta }}</h2>
+    {% if venta.factura %}
+    <a href="{{ url_for('facturas.detalle', id_factura=venta.factura.id_factura) }}" class="btn btn-primary">Ver factura</a>
+    {% endif %}
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <h3>Datos generales</h3>
+        <p><strong>Fecha:</strong> {{ venta.fecha_venta.strftime("%d/%m/%Y %H:%M") }}</p>
+        <p><strong>Pasajero:</strong> {{ venta.pasajero.nombre_completo }} (CI: {{ venta.pasajero.ci }})</p>
+        <p><strong>Viaje:</strong> {{ venta.viaje.origen }} → {{ venta.viaje.destino }} | {{ venta.viaje.fecha_viaje.strftime("%d/%m/%Y") }} {{ venta.viaje.hora_salida.strftime("%H:%M") }}</p>
+        <p><strong>Bus:</strong> {{ venta.viaje.bus.placa }} ({{ venta.viaje.bus.modelo }})</p>
+        <p><strong>Chofer:</strong> {{ venta.viaje.chofer.nombre_completo }}</p>
+        <p><strong>Registrado por:</strong> {{ venta.usuario.nombre }}</p>
+        <p>
+            <strong>Estado:</strong>
+            {% if venta.estado == "activa" %}
+            <span class="badge badge-success">Activa</span>
+            {% elif venta.estado == "rebajada" %}
+            <span class="badge badge-warning">Rebajada</span>
+            {% else %}
+            <span class="badge badge-danger">Anulada</span>
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Resumen de pago</h3>
+        <p><strong>Total:</strong> Bs {{ "%.2f"|format(venta.monto) }}</p>
+        <p><strong>Pagado:</strong> Bs {{ "%.2f"|format(venta.monto_pagado) }}</p>
+        <p><strong>Cambio entregado:</strong> Bs {{ "%.2f"|format(venta.cambio) }}</p>
+
+        {% if venta.estado != "anulada" %}
+        <form method="POST" action="{{ url_for('ventas.anular', id_venta=venta.id_venta) }}" class="mt-2" onsubmit="return confirmarAccion('¿Anular toda la venta? Se liberarán todos los asientos.')">
+            <div class="form-group">
+                <label for="motivo_anular">Motivo de anulación</label>
+                <input type="text" id="motivo_anular" name="motivo" placeholder="Ej. Cliente no abordó el bus">
+            </div>
+            <button type="submit" class="btn btn-danger">Anular venta completa</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h3>Asientos comprados</h3>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Asiento Nº</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in venta.detalles %}
+                <tr>
+                    <td>{{ d.viaje_asiento.numero }}</td>
+                    <td>Bs {{ "%.2f"|format(d.precio) }}</td>
+                    <td>
+                        {% if d.estado == "activo" %}
+                        <span class="badge badge-success">Activo</span>
+                        {% else %}
+                        <span class="badge badge-gray">Rebajado</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if d.estado == "activo" and venta.estado != "anulada" %}
+                        <form method="POST" action="{{ url_for('ventas.rebajar', id_venta=venta.id_venta, id_venta_detalle=d.id_venta_detalle) }}"
+                              onsubmit="return confirmarAccion('¿Rebajar el asiento {{ d.viaje_asiento.numero }}? Se liberará y se registrará el egreso en caja.')"
+                              style="display:flex; gap:0.5rem; align-items:center;">
+                            <input type="text" name="motivo" placeholder="Motivo (opcional)" style="width:160px;">
+                            <button type="submit" class="btn btn-sm btn-danger">Rebajar</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
