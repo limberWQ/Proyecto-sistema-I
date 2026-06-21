@@ -4,14 +4,38 @@ from app.services import viaje_service, bus_service, chofer_service
 from app.utils.helpers import to_float
 
 viajes_bp = Blueprint("viajes", __name__, url_prefix="/viajes")
+departamentos = ["La Paz","Beni","Chuquisaca","Cochabamba","Oruro","Pando","Potosí","Santa Cruz","Tarija"]
 
-
-@viajes_bp.route("/")
+@viajes_bp.route("/", methods=["GET", "POST"])
 @login_required
 def listar():
-    viajes = viaje_service.listar_viajes()
-    return render_template("viajes/listar.html", viajes=viajes)
 
+    viajes = viaje_service.listar_viajes()
+
+    fecha = None
+    estado = None
+    origen = None
+    destino = None
+
+    if request.method == "POST":
+        fecha = request.form.get("fecha")
+        estado = request.form.get("estado")
+        origen = request.form.get("origen")
+        destino = request.form.get("destino")
+
+        viajes = viaje_service.filtrar_viaje(fecha, origen, destino, estado)
+
+    return render_template(
+        "viajes/listar.html",
+        viajes=viajes,
+        departamentos=departamentos,
+        filtros={
+            "fecha": fecha,
+            "estado": estado,
+            "origen": origen,
+            "destino": destino
+        }
+    )
 
 @viajes_bp.route("/crear", methods=["GET", "POST"])
 @login_required
@@ -42,7 +66,7 @@ def crear():
         except Exception:
             flash("Datos inválidos. Verifica el formulario.", "danger")
 
-    return render_template("viajes/crear.html", buses=buses, choferes=choferes)
+    return render_template("viajes/crear.html", buses=buses, choferes=choferes, departamentos=departamentos)
 
 
 @viajes_bp.route("/editar/<int:id_viaje>", methods=["GET", "POST"])
@@ -80,7 +104,7 @@ def editar(id_viaje):
         except Exception:
             flash("Datos inválidos. Verifica el formulario.", "danger")
 
-    return render_template("viajes/editar.html", viaje=viaje, buses=buses, choferes=choferes)
+    return render_template("viajes/editar.html", viaje=viaje, buses=buses, choferes=choferes,departamentos=departamentos)
 
 
 @viajes_bp.route("/eliminar/<int:id_viaje>", methods=["POST"])

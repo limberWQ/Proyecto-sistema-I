@@ -4,7 +4,7 @@ from app.models.viaje import Viaje
 from app.models.viaje_asiento import ViajeAsiento
 from app.models.bus import Bus
 from app.models.chofer import Chofer
-
+from sqlalchemy import and_
 
 def listar_viajes():
     return Viaje.query.order_by(Viaje.fecha_viaje.desc(), Viaje.hora_salida.desc()).all()
@@ -13,6 +13,27 @@ def listar_viajes():
 def obtener_viaje(id_viaje):
     return Viaje.query.get_or_404(id_viaje)
 
+def filtrar_viaje(fecha=None, origen=None, destino=None, estado=None):
+    query = Viaje.query
+    filtros = []
+
+    if fecha:
+        fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
+        filtros.append(db.func.date(Viaje.fecha_viaje) == fecha_obj)
+
+    if estado:
+        filtros.append(Viaje.estado == estado)
+
+    if origen:
+        filtros.append(Viaje.origen == origen)
+
+    if destino:
+        filtros.append(Viaje.destino == destino)
+
+    if filtros:
+        query = query.filter(and_(*filtros))
+
+    return query.all()
 
 def _parse_fecha(fecha_str):
     return datetime.strptime(fecha_str, "%Y-%m-%d").date()

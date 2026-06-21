@@ -7,7 +7,8 @@ from app.models.viaje import Viaje
 from app.models.movimiento_caja import MovimientoCaja
 from app.services import pasajero_service
 from app.services.factura_service import generar_factura
-
+from sqlalchemy import and_
+from datetime import datetime
 
 def listar_ventas():
     return Venta.query.order_by(Venta.id_venta.desc()).all()
@@ -15,6 +16,29 @@ def listar_ventas():
 
 def obtener_venta(id_venta):
     return Venta.query.get_or_404(id_venta)
+
+
+def filtrar_venta(fecha=None, pasajero=None, origen=None, destino=None):
+    query = Venta.query
+    filtros = []
+
+    if fecha:
+        fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
+        filtros.append(db.func.date(Venta.fecha_venta) == fecha_obj)
+
+    if pasajero:
+        filtros.append(Venta.id_pasajero == pasajero)
+
+    if origen:
+        filtros.append(Venta.origen == origen)
+
+    if destino:
+        filtros.append(Venta.destino == destino)
+
+    if filtros:
+        query = query.filter(and_(*filtros))
+
+    return query.all()
 
 
 def registrar_venta(id_viaje, ids_viaje_asiento, datos_pasajero, monto_pagado, id_usuario):

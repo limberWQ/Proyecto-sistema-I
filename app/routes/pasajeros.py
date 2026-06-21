@@ -5,10 +5,14 @@ from app.services import pasajero_service
 pasajeros_bp = Blueprint("pasajeros", __name__, url_prefix="/pasajeros")
 
 
-@pasajeros_bp.route("/")
+@pasajeros_bp.route("/",methods=["GET","POST"])
 @login_required
 def listar():
-    pasajeros = pasajero_service.listar_pasajeros()
+    if request.method == "POST":
+        ci = request.form.get("ci")
+        pasajeros = pasajero_service.buscar_por_ci(ci)
+    else:
+        pasajeros = pasajero_service.listar_pasajeros()
     return render_template("pasajeros/listar.html", pasajeros=pasajeros)
 
 

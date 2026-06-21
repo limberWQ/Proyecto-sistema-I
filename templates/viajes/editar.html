@@ -1,34 +1,59 @@
 {% extends "base.html" %}
 {% block title %}Editar viaje{% endblock %}
 {% block content %}
+
 <h2 class="mb-2">Editar viaje</h2>
 
 <div class="card" style="max-width:600px;">
     <form method="POST">
+
         <div class="form-row">
+
+            <!-- ORIGEN (SELECT) -->
             <div class="form-group">
                 <label for="origen">Origen</label>
-                <input type="text" id="origen" name="origen" required maxlength="100" value="{{ viaje.origen }}">
+                <select id="origen" name="origen" required>
+                    <option value="">Seleccionar origen...</option>
+                    {% for d in departamentos %}
+                        <option value="{{ d }}" {% if viaje.origen == d %}selected{% endif %}>
+                            {{ d }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
+
+            <!-- DESTINO (SELECT) -->
             <div class="form-group">
                 <label for="destino">Destino</label>
-                <input type="text" id="destino" name="destino" required maxlength="100" value="{{ viaje.destino }}">
+                <select id="destino" name="destino" required>
+                    <option value="">Seleccionar destino...</option>
+                    {% for d in departamentos %}
+                        <option value="{{ d }}" {% if viaje.destino == d %}selected{% endif %}>
+                            {{ d }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
+
         </div>
+
         <div class="form-row">
             <div class="form-group">
                 <label for="fecha_viaje">Fecha</label>
                 <input type="date" id="fecha_viaje" name="fecha_viaje" required value="{{ viaje.fecha_viaje.strftime('%Y-%m-%d') }}">
             </div>
+
             <div class="form-group">
                 <label for="hora_salida">Hora de salida</label>
                 <input type="time" id="hora_salida" name="hora_salida" required value="{{ viaje.hora_salida.strftime('%H:%M') }}">
             </div>
         </div>
+
         <div class="form-group">
             <label for="precio">Precio por asiento (Bs)</label>
             <input type="number" id="precio" name="precio" step="0.01" min="0.01" required value="{{ viaje.precio }}">
         </div>
+
         <div class="form-row">
             <div class="form-group">
                 <label for="id_bus">Bus</label>
@@ -40,6 +65,7 @@
                     {% endfor %}
                 </select>
             </div>
+
             <div class="form-group">
                 <label for="id_chofer">Chofer</label>
                 <select id="id_chofer" name="id_chofer" required>
@@ -51,6 +77,7 @@
                 </select>
             </div>
         </div>
+
         <div class="form-group">
             <label for="estado">Estado</label>
             <select id="estado" name="estado" required>
@@ -59,11 +86,15 @@
                 <option value="cancelado" {% if viaje.estado == "cancelado" %}selected{% endif %}>Cancelado</option>
             </select>
         </div>
+
         <small class="text-muted">Nota: si cambia el bus, se regenerará el mapa de asientos del viaje.</small>
+
         <div class="btn-group mt-2">
             <button type="submit" class="btn btn-primary">Guardar cambios</button>
             <a href="{{ url_for('viajes.listar') }}" class="btn btn-secondary">Cancelar</a>
         </div>
+
     </form>
 </div>
+
 {% endblock %}

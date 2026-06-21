@@ -76,4 +76,36 @@
         </div>
     </div>
 </form>
+
+<script>
+document.getElementById("ci").addEventListener("blur", async function () {
+    const ci = this.value.trim();
+
+    if (!ci) return;
+
+    try {
+        const res = await fetch(`/ventas/pasajero/${ci}`);
+        const data = await res.json();
+
+        if (data.encontrado) {
+            document.getElementById("nombres").value = data.nombres || "";
+            document.getElementById("apellidos").value = data.apellidos || "";
+            document.getElementById("telefono").value = data.telefono || "";
+
+            // opcional: feedback visual
+            this.style.border = "2px solid #22c55e";
+        } else {
+            // limpiar si no existe
+            document.getElementById("nombres").value = "";
+            document.getElementById("apellidos").value = "";
+            document.getElementById("telefono").value = "";
+
+            this.style.border = "1px solid #cbd5e1";
+        }
+
+    } catch (err) {
+        console.error(err);
+    }
+});
+</script>
 {% endblock %}

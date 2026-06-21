@@ -1,20 +1,43 @@
 from decimal import Decimal
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from app.utils.auth import login_required
-from app.services import venta_service, viaje_service
+from app.services import venta_service, viaje_service, pasajero_service
 from app.models.viaje import Viaje
 from app.models.viaje_asiento import ViajeAsiento
 from app.utils.helpers import to_float
 
 ventas_bp = Blueprint("ventas", __name__, url_prefix="/ventas")
+departamentos = ["La Paz","Beni","Chuquisaca","Cochabamba","Oruro","Pando","Potosí","Santa Cruz","Tarija"]
 
-
-@ventas_bp.route("/")
+@ventas_bp.route("/", methods=["GET", "POST"])
 @login_required
 def listar():
-    ventas = venta_service.listar_ventas()
-    return render_template("ventas/listar.html", ventas=ventas)
 
+    ventas = venta_service.listar_ventas()
+
+    pasajeros = pasajero_service.listar_pasajeros()
+
+    if request.method == "POST":
+        fecha = request.form.get("fecha")
+        pasajero = request.form.get("pasajero")
+        origen = request.form.get("origen")
+        destino = request.form.get("destino")
+
+        pasajero = int(pasajero) if pasajero else None
+
+        ventas = venta_service.filtrar_venta(
+            fecha,
+            pasajero,
+            origen,
+            destino
+        )
+
+    return render_template(
+        "ventas/listar.html",
+        ventas=ventas,
+        pasajeros=pasajeros,
+        departamentos=departamentos
+    )
 
 @ventas_bp.route("/crear", methods=["GET", "POST"])
 @login_required
@@ -98,3 +121,19 @@ def anular(id_venta):
     except ValueError as e:
         flash(str(e), "danger")
     return redirect(url_for("ventas.detalle", id_venta=id_venta))
+
+@ventas_bp.route("/pasajero/<ci>", methods=["GET"])
+@login_required
+def buscar_pasajero(ci):
+    pasajero = pasajero_service.buscar_por_ci(ci)
+
+    if not pasajero:
+        return jsonify({"encontrado": False})
+
+    return jsonify({
+        "encontrado": True,
+        "ci": pasajero.ci,
+        "nombres": pasajero.nombres,
+        "apellidos": pasajero.apellidos,
+        "telefono": pasajero.telefono
+    })

@@ -11,7 +11,10 @@ def obtener_pasajero(id_pasajero):
 
 
 def buscar_por_ci(ci):
-    return Pasajero.query.filter_by(ci=ci.strip()).first()
+    ci = (ci or "").strip()
+    if not ci:
+        return None
+    return Pasajero.query.filter_by(ci=ci).first()
 
 
 def crear_pasajero(ci, nombres, apellidos, telefono):
@@ -24,6 +27,18 @@ def crear_pasajero(ci, nombres, apellidos, telefono):
     db.session.add(pasajero)
     db.session.commit()
     return pasajero
+
+
+def obtener_o_crear_pasajero(ci, nombres, apellidos, telefono):
+    pasajero = buscar_por_ci(ci)
+    if pasajero:
+        # Actualiza datos por si cambiaron
+        pasajero.nombres = nombres.strip()
+        pasajero.apellidos = apellidos.strip()
+        pasajero.telefono = (telefono or "").strip()
+        db.session.commit()
+        return pasajero
+    return crear_pasajero(ci, nombres, apellidos, telefono)
 
 
 def actualizar_pasajero(id_pasajero, ci, nombres, apellidos, telefono):
@@ -42,15 +57,3 @@ def eliminar_pasajero(id_pasajero):
         raise ValueError("No se puede eliminar el pasajero: tiene ventas registradas.")
     db.session.delete(pasajero)
     db.session.commit()
-
-
-def obtener_o_crear_pasajero(ci, nombres, apellidos, telefono):
-    pasajero = buscar_por_ci(ci)
-    if pasajero:
-        # Actualiza datos por si cambiaron
-        pasajero.nombres = nombres.strip()
-        pasajero.apellidos = apellidos.strip()
-        pasajero.telefono = (telefono or "").strip()
-        db.session.commit()
-        return pasajero
-    return crear_pasajero(ci, nombres, apellidos, telefono)
