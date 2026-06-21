@@ -92,10 +92,8 @@ document.getElementById("ci").addEventListener("blur", async function () {
             document.getElementById("apellidos").value = data.apellidos || "";
             document.getElementById("telefono").value = data.telefono || "";
 
-            // opcional: feedback visual
             this.style.border = "2px solid #22c55e";
         } else {
-            // limpiar si no existe
             document.getElementById("nombres").value = "";
             document.getElementById("apellidos").value = "";
             document.getElementById("telefono").value = "";
