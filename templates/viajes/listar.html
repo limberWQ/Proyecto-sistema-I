@@ -49,11 +49,13 @@
         Buscar
     </button>
 
+    {% if request.method == 'POST' %}
     <a href="{{ url_for('viajes.listar') }}"
        style="width:90px; height:38px; display:flex; justify-content:center; align-items:center;
               background:#64748b; color:white; text-decoration:none; border-radius:0.375rem;">
         Limpiar
     </a>
+    {% endif %}
 
 </form>
 

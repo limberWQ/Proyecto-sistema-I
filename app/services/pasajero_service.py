@@ -17,6 +17,18 @@ def buscar_por_ci(ci):
     return Pasajero.query.filter_by(ci=ci).first()
 
 
+def buscar_lista_por_ci(ci):
+    ci = (ci or "").strip()
+    if not ci:
+        return listar_pasajeros()
+    return (
+        Pasajero.query
+        .filter(Pasajero.ci.like(f"%{ci}%"))
+        .order_by(Pasajero.id_pasajero.desc())
+        .all()
+    )
+
+
 def crear_pasajero(ci, nombres, apellidos, telefono):
     pasajero = Pasajero(
         ci=ci.strip(),
@@ -32,7 +44,6 @@ def crear_pasajero(ci, nombres, apellidos, telefono):
 def obtener_o_crear_pasajero(ci, nombres, apellidos, telefono):
     pasajero = buscar_por_ci(ci)
     if pasajero:
-        # Actualiza datos por si cambiaron
         pasajero.nombres = nombres.strip()
         pasajero.apellidos = apellidos.strip()
         pasajero.telefono = (telefono or "").strip()

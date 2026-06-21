@@ -5,25 +5,21 @@
     <h2>Ventas</h2>
     <a href="{{ url_for('ventas.crear') }}" class="btn btn-primary">+ Nueva venta</a>
 </div>
-
 <form method="POST"
       action="{{ url_for('ventas.listar') }}"
       style="display:flex; gap: 0.5rem; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
-
-    <input type="date" name="fecha" style="height:38px; width:150px; border:1px solid #cbd5e1; border-radius:0.375rem;">
-
+    <input type="date" name="fecha" value="{{ request.form.get('fecha', '') }}" style="height:38px; width:150px; border:1px solid #cbd5e1; border-radius:0.375rem;">
     <select name="pasajero" style="height:38px; width:180px; border:1px solid #cbd5e1; border-radius:0.375rem;">
         <option value="">Pasajero</option>
         {% for p in pasajeros %}
-            <option value="{{ p.id_pasajero }}">
+            <option value="{{ p.id_pasajero }}"
+                {% if request.form.get('pasajero')|string == p.id_pasajero|string %}selected{% endif %}>
                 {{ p.nombres }} {{ p.apellidos }}
             </option>
         {% endfor %}
     </select>
-
     <select name="origen"
             style="height:38px; width:160px; border:1px solid #cbd5e1; border-radius:0.375rem;">
-
         <option value="">Origen</option>
         {% for d in departamentos %}
             <option value="{{ d }}"
@@ -32,10 +28,8 @@
             </option>
         {% endfor %}
     </select>
-
     <select name="destino"
             style="height:38px; width:160px; border:1px solid #cbd5e1; border-radius:0.375rem;">
-
         <option value="">Destino</option>
         {% for d in departamentos %}
             <option value="{{ d }}"
@@ -44,20 +38,18 @@
             </option>
         {% endfor %}
     </select>
-
     <button type="submit"
             style="width:90px; height:38px; background:#dadada; border:none; border-radius:0.375rem;">
         Buscar
     </button>
-
+    {% if request.method == 'POST' %}
     <a href="{{ url_for('ventas.listar') }}"
        style="width:90px; height:38px; display:flex; justify-content:center; align-items:center;
               background:#64748b; color:white; text-decoration:none; border-radius:0.375rem;">
         Limpiar
     </a>
-
+    {% endif %}
 </form>
-
 <div class="table-wrapper">
     <table>
         <thead>

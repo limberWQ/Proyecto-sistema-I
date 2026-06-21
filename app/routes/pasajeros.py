@@ -5,12 +5,12 @@ from app.services import pasajero_service
 pasajeros_bp = Blueprint("pasajeros", __name__, url_prefix="/pasajeros")
 
 
-@pasajeros_bp.route("/",methods=["GET","POST"])
+@pasajeros_bp.route("/", methods=["GET", "POST"])
 @login_required
 def listar():
     if request.method == "POST":
         ci = request.form.get("ci")
-        pasajeros = pasajero_service.buscar_por_ci(ci)
+        pasajeros = pasajero_service.buscar_lista_por_ci(ci)
     else:
         pasajeros = pasajero_service.listar_pasajeros()
     return render_template("pasajeros/listar.html", pasajeros=pasajeros)
@@ -25,10 +25,8 @@ def crear():
             nombres = request.form["nombres"]
             apellidos = request.form["apellidos"]
             telefono = request.form.get("telefono", "")
-
             if not ci.strip() or not nombres.strip() or not apellidos.strip():
                 raise ValueError("CI, nombres y apellidos son obligatorios.")
-
             pasajero_service.crear_pasajero(ci, nombres, apellidos, telefono)
             flash("Pasajero registrado correctamente.", "success")
             return redirect(url_for("pasajeros.listar"))
@@ -36,7 +34,6 @@ def crear():
             flash(str(e), "danger")
         except Exception:
             flash("El CI ya existe o los datos son inválidos.", "danger")
-
     return render_template("pasajeros/crear.html")
 
 
@@ -44,17 +41,14 @@ def crear():
 @login_required
 def editar(id_pasajero):
     pasajero = pasajero_service.obtener_pasajero(id_pasajero)
-
     if request.method == "POST":
         try:
             ci = request.form["ci"]
             nombres = request.form["nombres"]
             apellidos = request.form["apellidos"]
             telefono = request.form.get("telefono", "")
-
             if not ci.strip() or not nombres.strip() or not apellidos.strip():
                 raise ValueError("CI, nombres y apellidos son obligatorios.")
-
             pasajero_service.actualizar_pasajero(id_pasajero, ci, nombres, apellidos, telefono)
             flash("Pasajero actualizado correctamente.", "success")
             return redirect(url_for("pasajeros.listar"))
@@ -62,7 +56,6 @@ def editar(id_pasajero):
             flash(str(e), "danger")
         except Exception:
             flash("El CI ya existe o los datos son inválidos.", "danger")
-
     return render_template("pasajeros/editar.html", pasajero=pasajero)
 
 
