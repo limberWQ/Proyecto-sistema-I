@@ -18,8 +18,13 @@ def obtener_venta(id_venta):
     return Venta.query.get_or_404(id_venta)
 
 
+from app.models.viaje import Viaje
+
 def filtrar_venta(fecha=None, pasajero=None, origen=None, destino=None):
     query = Venta.query
+    if origen or destino:
+        query = query.join(Viaje, Venta.id_viaje == Viaje.id_viaje)
+
     filtros = []
 
     if fecha:
@@ -30,15 +35,15 @@ def filtrar_venta(fecha=None, pasajero=None, origen=None, destino=None):
         filtros.append(Venta.id_pasajero == pasajero)
 
     if origen:
-        filtros.append(Venta.origen == origen)
+        filtros.append(Viaje.origen == origen)
 
     if destino:
-        filtros.append(Venta.destino == destino)
+        filtros.append(Viaje.destino == destino)
 
     if filtros:
         query = query.filter(and_(*filtros))
 
-    return query.all()
+    return query.order_by(Venta.id_venta.desc()).all()
 
 
 def registrar_venta(id_viaje, ids_viaje_asiento, datos_pasajero, monto_pagado, id_usuario):
