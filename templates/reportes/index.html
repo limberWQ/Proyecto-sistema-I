@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Reportes{% endblock %}
+{% block content %}
+<h2 class="mb-2">Módulo de Reportes</h2>
+<p class="text-muted mb-2">Selecciona el tipo de reporte que deseas consultar. Todos los reportes pueden imprimirse directamente desde el navegador.</p>
+
+<div class="grid grid-2">
+    <a href="{{ url_for('reportes.ventas') }}" class="report-link">
+        <div class="card report-card report-card-accent">
+            <h3>Reporte de Ventas</h3>
+            <p class="text-muted">Historial de ventas por período con totales de ingresos y boletos vendidos.</p>
+        </div>
+    </a>
+    <a href="{{ url_for('reportes.viajes') }}" class="report-link">
+        <div class="card report-card report-card-success">
+            <h3>Reporte de Viajes</h3>
+            <p class="text-muted">Viajes programados por período, con ocupación y recaudación por ruta.</p>
+        </div>
+    </a>
+    <a href="{{ url_for('reportes.caja') }}" class="report-link">
+        <div class="card report-card report-card-danger">
+            <h3>Reporte de Caja</h3>
+            <p class="text-muted">Todos los ingresos y egresos de caja por período con saldo resultante.</p>
+        </div>
+    </a>
+    <a href="{{ url_for('reportes.pasajeros') }}" class="report-link">
+        <div class="card report-card report-card-warning">
+            <h3>Reporte de Pasajeros</h3>
+            <p class="text-muted">Nuevos pasajeros registrados y los más frecuentes en el período.</p>
+        </div>
+    </a>
+</div>
+{% endblock %}

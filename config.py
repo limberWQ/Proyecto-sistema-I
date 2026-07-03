@@ -4,6 +4,6 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    SECRET_KEY = "cambia-esta-clave-en-produccion"
+    SECRET_KEY = "proySisIUpea2026Sistemas"
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(BASE_DIR, "database", "transporte.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False

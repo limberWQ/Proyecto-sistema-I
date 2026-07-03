@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Reporte de Viajes{% endblock %}
+{% block content %}
+{% set titulo_reporte = "Reporte de Viajes" %}
+{% include "reportes/_filtro.html" %}
+
+<h2 class="mb-2 no-print">Reporte de Viajes</h2>
+<p class="text-muted mb-2 no-print">
+    {% if inicio and fin %}
+        Del {{ inicio.strftime("%d/%m/%Y") }} al {{ fin.strftime("%d/%m/%Y") }}
+    {% else %}
+        Mostrando todo el historial registrado
+    {% endif %}
+</p>
+
+<div class="grid grid-3 mb-2">
+    <div class="stat-box">
+        <div class="stat-value">{{ total_viajes }}</div>
+        <div class="stat-label">Total de viajes</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">{{ total_boletos }}</div>
+        <div class="stat-label">Boletos vendidos</div>
+    </div>
+    <div class="stat-box positive">
+        <div class="stat-value">Bs {{ "%.2f"|format(total_recaudado) }}</div>
+        <div class="stat-label">Total recaudado</div>
+    </div>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Ruta</th>
+                <th>Bus</th>
+                <th>Chofer</th>
+                <th>Capacidad</th>
+                <th>Vendidos</th>
+                <th>Ocupación</th>
+                <th>Recaudado (Bs)</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in datos %}
+            <tr>
+                <td>{{ d.viaje.fecha_viaje.strftime("%d/%m/%Y") }}</td>
+                <td>{{ d.viaje.origen }} → {{ d.viaje.destino }}</td>
+                <td>{{ d.viaje.bus.placa }}</td>
+                <td>{{ d.viaje.chofer.nombre_completo }}</td>
+                <td>{{ d.capacidad }}</td>
+                <td>{{ d.boletos_vendidos }}</td>
+                <td>
+                    <div class="occupancy">
+                        <div class="occupancy-track">
+                            <div class="occupancy-fill" style="width:{{ d.ocupacion_pct }}%;"></div>
+                        </div>
+                        {{ d.ocupacion_pct }}%
+                    </div>
+                </td>
+                <td>{{ "%.2f"|format(d.recaudado) }}</td>
+                <td>
+                    {% if d.viaje.estado == "programado" %}
+                    <span class="badge badge-blue">Programado</span>
+                    {% elif d.viaje.estado == "finalizado" %}
+                    <span class="badge badge-success">Finalizado</span>
+                    {% else %}
+                    <span class="badge badge-danger">Cancelado</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="9" class="empty-state">No hay viajes en el período seleccionado.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

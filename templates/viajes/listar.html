@@ -8,15 +8,14 @@
 
 <form method="POST"
       action="{{ url_for('viajes.listar') }}"
-      style="display:flex; gap: 0.5rem; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+      class="filter-bar">
 
     <input type="date"
            name="fecha"
            value="{{ filtros.fecha or '' }}"
-           style="height:38px; width:150px; border:1px solid #cbd5e1; border-radius:0.375rem; padding:0 0.5rem;">
+           class="filter-input">
 
-    <select name="estado"
-            style="height:38px; width:160px; border:1px solid #cbd5e1; border-radius:0.375rem;">
+    <select name="estado" class="filter-input">
 
         <option value="">Estado</option>
 
@@ -26,8 +25,7 @@
 
     </select>
 
-    <select name="origen"
-            style="height:38px; width:160px; border:1px solid #cbd5e1; border-radius:0.375rem;">
+    <select name="origen" class="filter-input">
 
         <option value="">Origen</option>
         {% for d in departamentos %}
@@ -35,8 +33,7 @@
         {% endfor %}
     </select>
 
-    <select name="destino"
-            style="height:38px; width:160px; border:1px solid #cbd5e1; border-radius:0.375rem;">
+    <select name="destino" class="filter-input">
 
         <option value="">Destino</option>
         {% for d in departamentos %}
@@ -44,17 +41,10 @@
         {% endfor %}
     </select>
 
-    <button type="submit"
-            style="width:90px; height:38px; background:#dadada; border:none; border-radius:0.375rem; font-weight:600;">
-        Buscar
-    </button>
+    <button type="submit" class="btn btn-primary filter-btn">Buscar</button>
 
     {% if request.method == 'POST' %}
-    <a href="{{ url_for('viajes.listar') }}"
-       style="width:90px; height:38px; display:flex; justify-content:center; align-items:center;
-              background:#64748b; color:white; text-decoration:none; border-radius:0.375rem;">
-        Limpiar
-    </a>
+    <a href="{{ url_for('viajes.listar') }}" class="btn btn-outline filter-btn">Limpiar</a>
     {% endif %}
 
 </form>
@@ -95,7 +85,7 @@
                     <span class="badge badge-danger">Cancelado</span>
                     {% endif %}
                     {% if v.tiene_ventas %}
-                    <span class="badge badge-warning">Con ventas</span>
+                    <br><br><span class="badge badge-warning">Con ventas</span>
                     {% endif %}
                 </td>
                 <td class="btn-group">

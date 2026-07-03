@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Reporte de Ventas{% endblock %}
+{% block content %}
+{% set titulo_reporte = "Reporte de Ventas" %}
+{% include "reportes/_filtro.html" %}
+
+<h2 class="mb-2 no-print">Reporte de Ventas</h2>
+<p class="text-muted mb-2 no-print">
+    {% if inicio and fin %}
+        Del {{ inicio.strftime("%d/%m/%Y") }} al {{ fin.strftime("%d/%m/%Y") }}
+    {% else %}
+        Mostrando todo el historial registrado
+    {% endif %}
+</p>
+
+<div class="grid grid-3 mb-2">
+    <div class="stat-box positive">
+        <div class="stat-value">Bs {{ "%.2f"|format(total_ingresos) }}</div>
+        <div class="stat-label">Total recaudado</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">{{ total_boletos }}</div>
+        <div class="stat-label">Boletos vendidos</div>
+    </div>
+    <div class="stat-box negative">
+        <div class="stat-value">{{ total_anuladas }}</div>
+        <div class="stat-label">Ventas anuladas</div>
+    </div>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>Pasajero</th>
+                <th>Viaje</th>
+                <th>Boletos</th>
+                <th>Total (Bs)</th>
+                <th>Pagado (Bs)</th>
+                <th>Cambio (Bs)</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for v in ventas %}
+            <tr>
+                <td>{{ v.id_venta }}</td>
+                <td>{{ v.fecha_venta.strftime("%d/%m/%Y %H:%M") }}</td>
+                <td>{{ v.pasajero.nombre_completo }}</td>
+                <td>{{ v.viaje.origen }} → {{ v.viaje.destino }}</td>
+                <td>{{ v.detalles_activos|length }}</td>
+                <td>{{ "%.2f"|format(v.monto) }}</td>
+                <td>{{ "%.2f"|format(v.monto_pagado) }}</td>
+                <td>{{ "%.2f"|format(v.cambio) }}</td>
+                <td>
+                    {% if v.estado == "activa" %}
+                    <span class="badge badge-success">Activa</span>
+                    {% elif v.estado == "rebajada" %}
+                    <span class="badge badge-warning">Rebajada</span>
+                    {% else %}
+                    <span class="badge badge-danger">Anulada</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="9" class="empty-state">No hay ventas en el período seleccionado.</td></tr>
+            {% endfor %}
+        </tbody>
+        {% if ventas %}
+        <tfoot>
+            <tr class="tfoot-total">
+                <td colspan="5">TOTALES</td>
+                <td>{{ "%.2f"|format(total_ingresos) }}</td>
+                <td colspan="3"></td>
+            </tr>
+        </tfoot>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}

@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from datetime import datetime
 from app.utils.auth import login_required
 from app.services import viaje_service, bus_service, chofer_service
 from app.utils.helpers import to_float
@@ -36,6 +37,34 @@ def listar():
             "destino": destino
         }
     )
+
+@viajes_bp.route("/disponibilidad")
+@login_required
+def disponibilidad():
+    """
+    Devuelve en JSON los IDs de bus y chofer ya ocupados en la fecha dada,
+    para que el formulario de creación/edición pueda deshabilitarlos antes
+    de que el usuario intente guardar.
+    """
+    fecha = request.args.get("fecha")
+    excluir_id_viaje = request.args.get("excluir_id_viaje", type=int)
+
+    if not fecha:
+        return jsonify({"buses_ocupados": [], "choferes_ocupados": []})
+
+    try:
+        fecha_obj = datetime.strptime(fecha, "%Y-%m-%d").date()
+    except ValueError:
+        return jsonify({"buses_ocupados": [], "choferes_ocupados": []})
+
+    ids_bus, ids_chofer = viaje_service.buses_y_choferes_ocupados(
+        fecha_obj, excluir_id_viaje=excluir_id_viaje
+    )
+    return jsonify({
+        "buses_ocupados": sorted(ids_bus),
+        "choferes_ocupados": sorted(ids_chofer),
+    })
+
 
 @viajes_bp.route("/crear", methods=["GET", "POST"])
 @login_required

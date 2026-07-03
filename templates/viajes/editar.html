@@ -38,7 +38,7 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="fecha_viaje">Fecha</label>
-                <input type="date" id="fecha_viaje" name="fecha_viaje" required value="{{ viaje.fecha_viaje.strftime('%Y-%m-%d') }}">
+                <input type="date" id="fecha_viaje" name="fecha_viaje" required value="{{ viaje.fecha_viaje.strftime('%Y-%m-%d') }}" data-excluir-id-viaje="{{ viaje.id_viaje }}">
             </div>
 
             <div class="form-group">

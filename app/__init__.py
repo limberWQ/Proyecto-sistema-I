@@ -25,6 +25,7 @@ def create_app(config_object="config.Config"):
     from app.routes.ventas import ventas_bp
     from app.routes.facturas import facturas_bp
     from app.routes.caja import caja_bp
+    from app.routes.reportes import reportes_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
@@ -35,7 +36,8 @@ def create_app(config_object="config.Config"):
     app.register_blueprint(ventas_bp)
     app.register_blueprint(facturas_bp)
     app.register_blueprint(caja_bp)
-
+    app.register_blueprint(reportes_bp)
+    
     with app.app_context():
         db.create_all()
         from app.utils.seed import seed_admin

@@ -24,9 +24,9 @@
                 <p class="text-muted">Selecciona un viaje para ver los asientos.</p>
             </div>
             <div class="seat-legend">
-                <div class="seat-legend-item"><span class="seat-legend-box" style="background:#fff;"></span> Disponible</div>
-                <div class="seat-legend-item"><span class="seat-legend-box" style="background:#2563eb; border-color:#1d4ed8;"></span> Seleccionado</div>
-                <div class="seat-legend-item"><span class="seat-legend-box" style="background:#f1f5f9;"></span> Ocupado</div>
+                <div class="seat-legend-item"><span class="seat-legend-box seat-legend-disponible"></span> Disponible</div>
+                <div class="seat-legend-item"><span class="seat-legend-box seat-legend-seleccionado"></span> Seleccionado</div>
+                <div class="seat-legend-item"><span class="seat-legend-box seat-legend-ocupado"></span> Ocupado</div>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
             </div>
             <div class="form-group">
                 <label>Total a pagar</label>
-                <p id="total-info" class="stat-value" style="font-size:1.4rem; color:#2563eb;" data-total="0">Bs 0.00</p>
+                <p id="total-info" class="stat-value board-figure" style="font-size:1.4rem;" data-total="0">Bs 0.00</p>
             </div>
             <div class="form-group">
                 <label for="monto_pagado">Monto que entrega el cliente (Bs)</label>
@@ -92,13 +92,13 @@ document.getElementById("ci").addEventListener("blur", async function () {
             document.getElementById("apellidos").value = data.apellidos || "";
             document.getElementById("telefono").value = data.telefono || "";
 
-            this.style.border = "2px solid #22c55e";
+            this.style.border = "2px solid #34d399";
         } else {
             document.getElementById("nombres").value = "";
             document.getElementById("apellidos").value = "";
             document.getElementById("telefono").value = "";
 
-            this.style.border = "1px solid #cbd5e1";
+            this.style.border = "1px solid rgba(148, 163, 184, 0.28)";
         }
 
     } catch (err) {

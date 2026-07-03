@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista previa — Centro de despacho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar-brand">
+        <span>Transporte Interdepartamental</span>
+    </div>
+    <nav class="topbar-nav">
+        <a href="#" style="color:var(--text-primary)">Inicio</a>
+        <a href="#">Viajes</a>
+        <a href="#">Ventas</a>
+        <a href="#">Facturas</a>
+        <a href="#">Pasajeros</a>
+        <a href="#">Buses</a>
+        <a href="#">Choferes</a>
+        <a href="#">Caja</a>
+        <a href="#">Reportes</a>
+    </nav>
+    <div class="topbar-user">
+        <span>Admin <small>(administrador)</small></span>
+        <a href="#" class="btn btn-sm btn-outline">Salir</a>
+    </div>
+</header>
+
+<main class="container">
+    <h2 class="mb-2">Panel de control</h2>
+
+    <div class="grid grid-4 mb-2">
+        <div class="stat-box">
+            <div class="stat-value">18</div>
+            <div class="stat-label">Ventas activas</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value">07</div>
+            <div class="stat-label">Buses</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value">09</div>
+            <div class="stat-label">Choferes</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value">312</div>
+            <div class="stat-label">Pasajeros</div>
+        </div>
+    </div>
+
+    <div class="grid grid-3 mb-2">
+        <div class="stat-box positive">
+            <div class="stat-value">Bs 8450.00</div>
+            <div class="stat-label">Ingresos totales</div>
+        </div>
+        <div class="stat-box negative">
+            <div class="stat-value">Bs 1120.00</div>
+            <div class="stat-label">Egresos totales</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value">Bs 7330.00</div>
+            <div class="stat-label">Saldo en caja</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Viajes de hoy</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>Hora</th><th>Origen</th><th>Destino</th><th>Bus</th><th>Chofer</th><th>Asientos</th><th>Estado</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="numeric">06:30</td><td>La Paz</td><td>Caranavi</td><td class="numeric">2847-ABC</td><td>Marco Quispe</td><td class="numeric">18 / 40</td>
+                        <td><span class="badge badge-blue">Programado</span></td>
+                    </tr>
+                    <tr>
+                        <td class="numeric">09:15</td><td>Caranavi</td><td>La Paz</td><td class="numeric">1190-XYZ</td><td>Elena Mamani</td><td class="numeric">40 / 40</td>
+                        <td><span class="badge badge-success">Finalizado</span></td>
+                    </tr>
+                    <tr>
+                        <td class="numeric">14:00</td><td>La Paz</td><td>Coroico</td><td class="numeric">0552-LPZ</td><td>Iván Choque</td><td class="numeric">05 / 40</td>
+                        <td><span class="badge badge-danger">Cancelado</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="grid grid-2">
+        <div class="card">
+            <h3>Mapa de asientos</h3>
+            <div class="seat-map">
+                <div class="seat seleccionado">01</div>
+                <div class="seat disponible">02</div>
+                <div class="seat ocupado">03</div>
+                <div class="seat disponible">04</div>
+                <div class="seat disponible">05</div>
+                <div class="seat seleccionado">06</div>
+                <div class="seat ocupado">07</div>
+                <div class="seat disponible">08</div>
+            </div>
+            <div class="seat-legend">
+                <div class="seat-legend-item"><span class="seat-legend-box seat-legend-disponible"></span> Disponible</div>
+                <div class="seat-legend-item"><span class="seat-legend-box seat-legend-seleccionado"></span> Seleccionado</div>
+                <div class="seat-legend-item"><span class="seat-legend-box seat-legend-ocupado"></span> Ocupado</div>
+            </div>
+        </div>
+
+        <div class="login-wrapper" style="min-height:auto; padding:0;">
+            <div class="login-card" style="max-width:100%;">
+                <h1>Transporte Interdepartamental</h1>
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <input type="text" placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+                <button class="btn btn-primary">Ingresar</button>
+                <p class="login-hint">Acceso exclusivo para administradores y encargados de venta.</p>
+                <div class="demo-creds">
+                    <span class="demo-creds-label">Credenciales de prueba</span>
+                    <span>Usuario: <strong>admin</strong></span>
+                    <span>Contraseña: <strong>admin123</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="mb-2 mt-2">Módulo de reportes</h2>
+    <div class="grid grid-2">
+        <div class="card report-card report-card-accent">
+            <h3>Reporte de ventas</h3>
+            <p class="text-muted">Historial de ventas por período con totales de ingresos y boletos vendidos.</p>
+        </div>
+        <div class="card report-card report-card-success">
+            <h3>Reporte de viajes</h3>
+            <p class="text-muted">Viajes programados por período, con ocupación y recaudación por ruta.</p>
+        </div>
+        <div class="card report-card report-card-danger">
+            <h3>Reporte de caja</h3>
+            <p class="text-muted">Todos los ingresos y egresos de caja por período con saldo resultante.</p>
+        </div>
+        <div class="card report-card report-card-warning">
+            <h3>Reporte de pasajeros</h3>
+            <p class="text-muted">Nuevos pasajeros registrados y los más frecuentes en el período.</p>
+        </div>
+    </div>
+
+    <div class="card mt-2">
+        <h3>Ocupación por viaje</h3>
+        <table>
+            <thead><tr><th>Ruta</th><th>Ocupación</th><th>Estado</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>La Paz → Caranavi</td>
+                    <td>
+                        <div class="occupancy">
+                            <div class="occupancy-track"><div class="occupancy-fill" style="width:78%;"></div></div>
+                            78%
+                        </div>
+                    </td>
+                    <td><span class="badge badge-blue">Programado</span></td>
+                </tr>
+                <tr>
+                    <td>Caranavi → La Paz</td>
+                    <td>
+                        <div class="occupancy">
+                            <div class="occupancy-track"><div class="occupancy-fill" style="width:100%;"></div></div>
+                            100%
+                        </div>
+                    </td>
+                    <td><span class="badge badge-success">Finalizado</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

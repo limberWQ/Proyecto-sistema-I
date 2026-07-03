@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Reporte de Caja{% endblock %}
+{% block content %}
+{% set titulo_reporte = "Reporte de Caja" %}
+{% include "reportes/_filtro.html" %}
+
+<h2 class="mb-2 no-print">Reporte de Caja</h2>
+<p class="text-muted mb-2 no-print">
+    {% if inicio and fin %}
+        Del {{ inicio.strftime("%d/%m/%Y") }} al {{ fin.strftime("%d/%m/%Y") }}
+    {% else %}
+        Mostrando todo el historial registrado
+    {% endif %}
+</p>
+
+<div class="grid grid-3 mb-2">
+    <div class="stat-box positive">
+        <div class="stat-value">Bs {{ "%.2f"|format(total_ingresos) }}</div>
+        <div class="stat-label">Total ingresos</div>
+    </div>
+    <div class="stat-box negative">
+        <div class="stat-value">Bs {{ "%.2f"|format(total_egresos) }}</div>
+        <div class="stat-label">Total egresos</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-value">Bs {{ "%.2f"|format(saldo) }}</div>
+        <div class="stat-label">Saldo del período</div>
+    </div>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Concepto</th>
+                <th>Monto (Bs)</th>
+                <th>Registrado por</th>
+                <th>Venta relacionada</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimientos %}
+            <tr>
+                <td>{{ m.id_movimiento }}</td>
+                <td>{{ m.fecha.strftime("%d/%m/%Y %H:%M") }}</td>
+                <td>
+                    {% if m.tipo == "ingreso" %}
+                    <span class="badge badge-success">Ingreso</span>
+                    {% else %}
+                    <span class="badge badge-danger">Egreso</span>
+                    {% endif %}
+                </td>
+                <td>{{ m.concepto }}</td>
+                <td>{{ "%.2f"|format(m.monto) }}</td>
+                <td>{{ m.usuario.nombre }}</td>
+                <td>{% if m.id_venta %}#{{ m.id_venta }}{% else %}-{% endif %}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="empty-state">No hay movimientos en el período seleccionado.</td></tr>
+            {% endfor %}
+        </tbody>
+        {% if movimientos %}
+        <tfoot>
+            <tr class="tfoot-total">
+                <td colspan="4">SALDO DEL PERÍODO</td>
+                <td>{{ "%.2f"|format(saldo) }}</td>
+                <td colspan="2"></td>
+            </tr>
+        </tfoot>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}

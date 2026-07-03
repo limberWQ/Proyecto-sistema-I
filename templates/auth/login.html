@@ -3,6 +3,7 @@
 {% block content %}
 <div class="login-wrapper">
     <div class="login-card">
+        
         <h1>Transporte Interdepartamental</h1>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -26,6 +27,13 @@
         </form>
 
         <p class="login-hint">Acceso exclusivo para administradores y encargados de venta.</p>
+
+        <div class="demo-creds">
+            <span class="demo-creds-label">Credenciales de prueba</span>
+            <span>Usuario: <strong>admin</strong></span>
+            <span>Contraseña: <strong>admin123</strong></span>
+        </div>
+
     </div>
 </div>
 {% endblock %}
